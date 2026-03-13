@@ -64,31 +64,32 @@ Planned next:
 ---
 
 ## Project Structure
+
+```text
 ProjectSpace
 │
 ├── Controllers
-│ └── AuthController.cs
+│   └── AuthController.cs
 │
 ├── Data
-│ └── AppDbContext.cs
+│   └── AppDbContext.cs
 │
 ├── Models
-│ ├── ApplicationUser.cs
-│ ├── Project.cs
-│ └── TaskItem.cs
+│   ├── ApplicationUser.cs
+│   ├── Project.cs
+│   └── TaskItem.cs
 │
 ├── Dtos
-│ └── Auth
-│ ├── RegisterDto.cs
-│ └── LoginDto.cs
+│   └── Auth
+│       ├── RegisterDto.cs
+│       └── LoginDto.cs
 │
 ├── Enums
-│ ├── ProjectStatus.cs
-│ └── TaskStatus.cs
+│   ├── ProjectStatus.cs
+│   └── TaskStatus.cs
 │
 └── Program.cs
-
-
+```
 ---
 
 ## Setup Instructions
