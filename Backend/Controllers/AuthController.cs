@@ -6,11 +6,12 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using ProjectSpace.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProjectSpace.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -21,6 +22,7 @@ namespace ProjectSpace.Controllers
             _userManager = userManager;
             _configuration = configuration;
         }
+
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto registerDto)
@@ -61,6 +63,7 @@ namespace ProjectSpace.Controllers
             });
         }
 
+
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto) 
         {
@@ -90,10 +93,46 @@ namespace ProjectSpace.Controllers
                 token,
                 email = user.Email,
                 firstName = user.FirstName,
-                lastname = user.LastName
+                lastName = user.LastName
             });
 
         }
+
+        //Only authenticated users can call this endpoint.
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> Me()
+        {
+            //read the user id from the token
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new
+                {
+                    message = "User ID claim not found."
+                });
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound(new
+                {
+                    message = "User not found."
+                });
+            }
+
+            return Ok(new
+            {
+                id = user.Id,
+                email = user.Email,
+                firstName = user.FirstName,
+                lastName = user.LastName
+            });
+        }
+
 
         private string GenerateJwtToken(ApplicationUser user)
         {

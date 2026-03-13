@@ -16,9 +16,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.16.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.4" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.13.1" />
   </ItemGroup>
 
   <ItemGroup>
