@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ProjectSpace.Data;
 using ProjectSpace.Models;
+using ProjectSpace.Services.AuthService;
+using ProjectSpace.Services.ProjectService;
 using Scalar.AspNetCore;
 using System.Text;
 
@@ -32,6 +34,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
