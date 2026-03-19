@@ -47,7 +47,7 @@ Authorization: Bearer <your_token_here>
 All project endpoints require authentication.
 
 ### Base Route
-`/api/project`
+  `/api/project`
 | Method | Endpoint | Description |
 |------|------|------|
 | GET | `/api/project` | Get all projects for current user |
@@ -60,6 +60,28 @@ Notes
 - Projects are user-scoped (users can only access their own projects)
 - Each project includes its related tasks
 - Tasks are returned as part of the project response
+
+---
+
+## Task Endpoint
+
+All task endpoints require authentication.
+
+### Base Route
+  `/api/taskitem`
+| Method | Endpoint | Description |
+|------|------|------|
+| GET | `/api/taskitem` | Get all tasks across user projects |
+| GET | `/api/taskitem/{id}` | Get task by ID |
+| GET | `/api/taskitem/project/{projectId}` | Get tasks for a specific project |
+| POST | `/api/taskitem` | Create new task |
+| PUT | `/api/taskitem/{id}` | Update task |
+| DELETE | `/api/taskitem/{id}` | Delete task |
+
+Notes
+- Tasks are always linked to a project
+- Users can only access tasks within their own projects
+- Task status is managed using TaskItemStatus enum
 
 ---
 
@@ -90,7 +112,9 @@ Planned next:
 ProjectSpace
 │
 ├── Controllers
-│   └── AuthController.cs
+│   ├── AuthController.cs
+|   ├── ProjectController.cs
+|   └── TaskItemController.cs
 │
 ├── Data
 │   └── AppDbContext.cs
@@ -101,9 +125,9 @@ ProjectSpace
 │   └── TaskItem.cs
 │
 ├── Dtos
-│   └── Auth
-│       ├── RegisterDto.cs
-│       └── LoginDto.cs
+│   ├── Auth/
+│   ├── Projects/
+│   └── TaskItems/
 │
 ├── Enums
 │   ├── ProjectStatus.cs
@@ -159,7 +183,7 @@ This project is designed to practice and demonstrate:
 
 ---
 
-## 📄 License
+## License
 
 This project is for educational and learning purposes.
 
