@@ -28,7 +28,7 @@ This repository currently contains the **backend API**, which handles authentica
 
 Authentication is implemented using **ASP.NET Core Identity** and **JWT tokens**.
 
-### Current Auth Endpoints
+### Auth Endpoints
 
 | Method | Endpoint | Description |
 |------|------|------|
@@ -39,6 +39,27 @@ Authentication is implemented using **ASP.NET Core Identity** and **JWT tokens**
 Protected endpoints require a JWT token in the header:
 Authorization: Bearer <your_token_here>
 
+
+---
+
+## Project Endpoint
+
+All project endpoints require authentication.
+
+### Base Route
+`/api/project`
+| Method | Endpoint | Description |
+|------|------|------|
+| GET | `/api/project` | Get all projects for current user |
+| GET | `/api/project/{id}` | Get project by ID |
+| POST | `/api/project` | Create new project |
+| PUT | `/api/project/{id}` | Update project |
+| DELETE | `/api/project/{id}` | Delete project |
+
+Notes
+- Projects are user-scoped (users can only access their own projects)
+- Each project includes its related tasks
+- Tasks are returned as part of the project response
 
 ---
 
