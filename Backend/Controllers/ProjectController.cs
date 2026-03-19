@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectSpace.Dtos.Projects;
+using ProjectSpace.Models;
 using ProjectSpace.Services.ProjectService;
 using System.Security.Claims;
 
@@ -19,18 +20,21 @@ namespace ProjectSpace.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> GetProjects()
+        private string GetUserIdOrThrow()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrWhiteSpace(userId))
-            {
-                return Unauthorized(new
-                {
-                    message = "User ID claim not found."
-                });
-            }
+                throw new UnauthorizedAccessException("User ID claim not found.");
+
+            return userId;
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetProjects()
+        {
+            var userId = GetUserIdOrThrow();
 
             var projects = await _service.GetAllProjectsAsync(userId);
 
@@ -41,55 +45,47 @@ namespace ProjectSpace.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetProjectById(Guid id)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = GetUserIdOrThrow();
 
-            if (string.IsNullOrWhiteSpace(userId))
+            var project = await _service.GetProjectByIdAsync(id, userId);
+
+            if (project == null)
             {
-                return Unauthorized(new
+                return NotFound(new
                 {
-                    message = "User ID claim not found."
+                    message = "Project not found."
                 });
             }
 
-            var projects = await _service.GetProjectByIdAsync(id, userId);
-
-            return Ok(projects);
+            return Ok(project);
         }
 
 
         [HttpPost]
         public async Task<IActionResult> CreateProject([FromBody] CreateProjectDto createProjectDto)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrWhiteSpace(userId))
-            {
-                return Unauthorized(new
-                {
-                    message = "User ID claim not found."
-                });
-            }
+            var userId = GetUserIdOrThrow();
 
             var project = await _service.AddProjectAsync(createProjectDto, userId);
 
-            return CreatedAtAction(nameof(GetProjects), new { id = project.Id }, project);
+            return CreatedAtAction(nameof(GetProjectById), new { id = project.Id }, project);
         }
 
 
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateProject(Guid id, UpdateProjectDto updateProjectDto)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrWhiteSpace(userId))
-            {
-                return Unauthorized(new
-                {
-                    message = "User ID claim not found."
-                });
-            }
+            var userId = GetUserIdOrThrow();
 
             var project = await _service.UpdateProjectAsync(id, updateProjectDto, userId);
+
+            if (project == null)
+            {
+                return NotFound(new
+                {
+                    message = "Project not found."
+                });
+            }
 
             return Ok(project);
         }
@@ -98,15 +94,7 @@ namespace ProjectSpace.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteProject(Guid id) 
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrWhiteSpace(userId))
-            {
-                return Unauthorized(new
-                {
-                    message = "User ID claim not found."
-                });
-            }
+            var userId = GetUserIdOrThrow();
 
             var deleted = await _service.DeleteProjectAsync(id, userId);
 

@@ -1,18 +1,10 @@
 ﻿using ProjectSpace.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace ProjectSpace.Models
+namespace ProjectSpace.Dtos.TaskItems
 {
-    public class TaskItem
+    public class UpdateTaskItemsDto
     {
-        [Key]
-        public Guid Id { get; set; }
-
-        [Required]
-        public Guid ProjectId { get; set; }
-
-        public Project Project { get; set; } = null!;
-
         [Required]
         [MaxLength(100)]
         public string Title { get; set; } = string.Empty;
@@ -23,10 +15,6 @@ namespace ProjectSpace.Models
         [Required]
         public TaskItemStatus Status { get; set; }
 
-        [Required]
         public DateTime? DueDate { get; set; }
-
-        public DateTime CreatedAt { get; set; }
-
     }
 }

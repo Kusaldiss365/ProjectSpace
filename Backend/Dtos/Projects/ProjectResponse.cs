@@ -13,8 +13,7 @@ namespace ProjectSpace.Dtos.Projects
 
         public ProjectStatus Status { get; set; }
 
-        public ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
-
+        public List<TaskSummaryDto> Tasks { get; set; } = new();
         
     }
 }

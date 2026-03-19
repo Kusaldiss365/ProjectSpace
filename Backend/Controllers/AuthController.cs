@@ -1,11 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProjectSpace.Dtos.Auth;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using ProjectSpace.Models;
 using Microsoft.AspNetCore.Authorization;
 using ProjectSpace.Services.AuthService;
 

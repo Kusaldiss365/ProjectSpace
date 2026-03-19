@@ -20,7 +20,16 @@ namespace ProjectSpace.Services.ProjectService
             Name = p.Name,
             Description = p.Description,
             Status = p.Status,
-            Tasks = p.Tasks,
+            Tasks = p.Tasks.Select(t => new TaskSummaryDto
+            {
+                Id = t.Id,
+                ProjectId = t.ProjectId,
+                Title = t.Title,
+                Description = t.Description,
+                Status = t.Status,
+                DueDate = t.DueDate,
+                CreatedAt = t.CreatedAt
+            }).ToList()
         };
 
         private static List<ProjectResponse> ToResponse(List<Project> projects) =>
@@ -30,7 +39,16 @@ namespace ProjectSpace.Services.ProjectService
                 Name = p.Name,
                 Description = p.Description,
                 Status = p.Status,
-                Tasks = p.Tasks
+                Tasks = p.Tasks.Select(t => new TaskSummaryDto
+                {
+                    Id = t.Id,
+                    ProjectId = t.ProjectId,
+                    Title = t.Title,
+                    Description = t.Description,
+                    Status = t.Status,
+                    DueDate = t.DueDate,
+                    CreatedAt = t.CreatedAt
+                }).ToList()
             }).ToList();
 
 
@@ -38,6 +56,7 @@ namespace ProjectSpace.Services.ProjectService
         {
 
             var projects = await _context.Projects
+                            .Include(p => p.Tasks)
                             .Where(p => p.OwnerUserId == userId)
                             .OrderByDescending(p => p.CreatedAt)
                             .ToListAsync();
@@ -46,11 +65,16 @@ namespace ProjectSpace.Services.ProjectService
         }
 
 
-        public async Task<List<ProjectResponse>> GetProjectByIdAsync(Guid projectId, string userId)
+        public async Task<ProjectResponse?> GetProjectByIdAsync(Guid projectId, string userId)
         {
             var project = await _context.Projects
-                            .Where(p => p.OwnerUserId == userId && p.Id == projectId)
-                            .ToListAsync();
+                            .Include(p => p.Tasks)
+                            .FirstOrDefaultAsync(p => p.OwnerUserId == userId && p.Id == projectId);
+
+            if (project == null)
+            {
+                return null;
+            }
 
             return ToResponse(project);
         }
@@ -65,7 +89,7 @@ namespace ProjectSpace.Services.ProjectService
                 Description = project.Description,
                 Status = project.Status,
                 CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
+                UpdatedAt = null,
                 OwnerUserId = userId,
             };
 

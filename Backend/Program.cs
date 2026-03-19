@@ -7,6 +7,7 @@ using ProjectSpace.Data;
 using ProjectSpace.Models;
 using ProjectSpace.Services.AuthService;
 using ProjectSpace.Services.ProjectService;
+using ProjectSpace.Services.TaskItemService;
 using Scalar.AspNetCore;
 using System.Text;
 
@@ -37,6 +38,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITaskItemService, TaskItemService>();
 
 // JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
